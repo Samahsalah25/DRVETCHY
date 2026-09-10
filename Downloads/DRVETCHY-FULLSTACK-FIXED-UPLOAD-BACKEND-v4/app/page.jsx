@@ -1,3 +1,6 @@
-import StoreApp from '../components/StoreApp';
+import StoreAppClient from '../components/StoreAppClient';
 import '../styles/globals.css';
-export default function Page(){return <StoreApp/>}
+
+export default function Page() {
+  return <StoreAppClient />;
+}
