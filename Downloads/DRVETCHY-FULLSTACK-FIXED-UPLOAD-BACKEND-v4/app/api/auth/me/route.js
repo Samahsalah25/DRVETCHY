@@ -1,0 +1,1 @@
+import {NextResponse} from 'next/server';import {getUser} from '../../../../lib/auth';export async function GET(){const u=await getUser();return NextResponse.json({user:u?{id:u.id,name:u.name,email:u.email,isAdmin:u.isAdmin}:null})}

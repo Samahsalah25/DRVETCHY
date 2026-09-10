@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import bcrypt from 'bcryptjs';import {db} from '../../../../lib/db';import {setSession} from '../../../../lib/auth';
+export async function POST(req){const {name,email,password}=await req.json();const e=email.toLowerCase();if(await db.user.findUnique({where:{email:e}}))return NextResponse.json({error:'Email exists'},{status:409});const u=await db.user.create({data:{name,email:e,passwordHash:await bcrypt.hash(password,12)}});await setSession(u);return NextResponse.json({user:{id:u.id,name:u.name,email:u.email,isAdmin:u.isAdmin}})}

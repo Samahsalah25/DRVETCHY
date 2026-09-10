@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import bcrypt from 'bcryptjs';import {db} from '../../../../lib/db';import {setSession} from '../../../../lib/auth';
+export async function POST(req){const {email,password}=await req.json();const u=await db.user.findUnique({where:{email:email.toLowerCase()}});if(!u?.isAdmin||!(await bcrypt.compare(password,u.passwordHash)))return NextResponse.json({error:'Invalid credentials'},{status:401});await setSession(u);return NextResponse.json({user:{id:u.id,name:u.name,email:u.email,isAdmin:true}})}

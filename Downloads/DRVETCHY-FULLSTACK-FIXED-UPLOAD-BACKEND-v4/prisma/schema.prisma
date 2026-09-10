@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+  name       String
+  email      String     @unique
+  passwordHash String
+  isAdmin    Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  orders     Order[]
+  favorites  Favorite[]
+  cartItems  CartItem[]
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  nameAr      String
+  nameEn      String
+  category    String
+  typeAr      String
+  typeEn      String
+  price       Float
+  color       String
+  materialAr  String
+  materialEn  String
+  descAr      String
+  descEn      String
+  image       String?
+  stock       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  favorites   Favorite[]
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+}
+
+model Favorite {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@unique([userId, productId])
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  orderNumber String      @unique
+  userId      String?
+  customer    Json
+  total       Float
+  status      String      @default("new")
+  createdAt   DateTime    @default(now())
+  user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items       OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  qty       Int
+  price     Float
+  nameAr    String
+  nameEn    String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product  Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+}
+
+model Setting {
+  id        String   @id @default("main")
+  data      Json
+  updatedAt DateTime @updatedAt
+}
+
+model CartItem {
+  id        String  @id @default(cuid())
+  userId    String
+  productId String
+  qty       Int     @default(1)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  @@unique([userId, productId])
+}
