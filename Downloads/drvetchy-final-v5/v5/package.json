@@ -1,0 +1,5 @@
+{
+  "name":"dr-vetchy-store","private":true,"version":"1.1.0","type":"module",
+  "scripts":{"dev":"vite","server":"node server.cjs","dev:all":"concurrently \"npm run server\" \"npm run dev\"","build":"vite build","preview":"vite preview"},
+  "dependencies":{"@vitejs/plugin-react":"latest","vite":"latest","react":"latest","react-dom":"latest","lucide-react":"latest","react-router-dom":"latest","concurrently":"latest"},"devDependencies":{}
+}
